@@ -1,0 +1,278 @@
+Changes since 1.5 are documented in debian/changelog.
+
+Release notes for deborphan 1.5 (2002-02-24T16+0200)
+* No more breakage with prelink (wrong NUM_OPTIONS) (Peter Palfrader, #181311)
+* Orphaner exits nicely.                            (Peter Palfrader, #163220)
+* Orphaner shows new packages at the top.           (Joerg Sommer, #176424)
+* Danish translation added.                         (Morten Brix Pedersen)
+* Added --find-config option.                       (Suggested by Martin
+                                                     Quinson, #180010)
+
+Release notes for deborphan 1.4 (2002-12-10T13+0200)
+* Orphaner now recognises all --guess-* options  (Peter Palfrader)
+* Added --guess-data option.                     (Debian bug #170381)
+
+Release notes for deborphan 1.3 (2002-07-19T11+0200)
+* Free correct variable in readkeep.             (Debian bug #153319)
+* Fixed possible buffer overrun in strstripchr.  (Wessel Dankers)
+* Added --guess-common option.                   (Suggested by Peter Palfrader)
+* "Fixed" bug in readkeep that caused EBADF.     (Debian bug #153397)
+  I don't understand how my fix fixes it. But it seems to do.
+* Added --zero-keep option.                      (Debian bug #153397)
+
+Release notes for deborphan 1.2 (2002-07-14T22+0200)
+* Added --guess-dummy option.     (Debian bug #141810, James Troup)
+* Changed --guess-only in --help. (Debian bug #132338, Christian Kurz)
+* Ignore "essential" packages     (Debian bug #96794,  Rob Black)
+* Made some minor efficiency/cleanliness changes in deborphan.c
+  and pkginfo.c.
+
+Release notes for deborphan 1.1 (2002-07-10T19+0200)
+* Added --purge option for orphaner.                 (Peter Palfrader)
+* Added guess support for python, pike and ruby.     (Sean Perry)
+* Fixed a small memory leak in LOW_MEM nextline().
+* Fixed a technical call error in LOW_MEM nextline().
+* Fixed two memory leaks in pkggrep().
+* Fixed a bug in mustkeep() (finally remembered).
+* Fixed possible buffer overflow in readkeep().
+* Renamed statusopen() to debopen().
+* Rewrote delkeep() to do in-memory updates.
+* Added sstrsep() function in string.c.
+* Implemented pkgcmp() as a macro.
+
+Release notes for deborphan 1.0 (2001-04-28T17+0200)
+* Added editkeep(8) manual page by Peter Palfrader.
+* Finally remembered to fix that bug in keep.c.
+* First stable release. Let's hope it stays that way.
+
+Release notes for deborphan 0.1.25 (2001-03-28T20+0200)
+* Fixed typo in configure.in (depfoster->debfoster)
+* Fixed typos in NEWS (2000->2001).
+* Fixed typo in manpage.
+* Added --no-df-keep option (changes meaning of --df-keep).
+* Listing through -L is done after all options are parsed.
+
+Release notes for deborphan 0.1.24 (2001-02-14T17+0200)
+* Actually, 0.1.23 put the keepfile in /var/lib/deborphan/.
+  And it still does so.
+* Added hasduplicate() function to keep.c
+* Added is_library() function to pkginfo.c (for use with -s)
+* Added check for location of debfoster's keepers file in
+  configure (supports new /var/state/debfoster/keepers).
+* Fixed bug in parseargs() which caused deborphan to read
+  stdin when passing packagenames starting with '-'.
+* Removed setvbuf() call. It appears to be broken in some way.
+* Added 'duplicate dependency' check. i.e. 
+  "Depends: libc6 (<< 1.0), libc6 (>> 0.5)" is now shown only
+  once with --show-deps.
+* More clear error messages for 'keep' functions.
+* Added check for package's existance on -A.
+
+Release notes for deborphan 0.1.23 (2001-01-05T21+0200)
+* Defaulted location of keepfile to $prefix/var.
+* Added reading of debfoster's /etc/apt/keepers.
+* Added --df-keep option.
+* Added check for duplicate keep-entries.
+* Check for empty section in check_lib_deps.               (Peter Palfrader)
+* New orphaner (also 'editkeep')                           (Peter Palfrader)
+
+Release notes for deborphan 0.1.22 (2001-01-04T21+0200)
+* Silly bug in set.c.
+* Quicky release.
+
+Release notes for deborphan 0.1.21 (2000-12-31T19+0200)
+* Added option to use less memory (at the cost of speed).
+* Replaced call to malloc() with xcalloc() in keep.c.
+* Used parseargs() for 'search'. Hence, it now accepts stdin.
+* Replaced --fake-dev by --guess-* options.
+* Fixed memory leak on uninstalled packages.
+* Added set.c and set.h.
+* Moved get_pkg_deps into pkginfo.c, and reduced it to half its 
+  length.
+* Removed global variable num_deps.
+* Added some stuff in deborphan.h to help compilation with 
+  -ansi -pedantic.
+* Fixed memory leak in file reading when compiled with !LOW_MEM.
+
+Release notes for deborphan 0.1.20 (2000-12-31T17+0200)
+* Ran indent -i4 -br -psl -ce -npcs on the source.
+* Replaced occurence of 'fprintf(); exit()' with error().
+* Added "keeper" support, with applicable options.
+* Faster reading of the status file (full buffering).
+* Removed 'dpkghold' and 'dpkghold' (obsoleted by keepers).
+* Fixed bug in check_lib_deps() which caused -d to fail when
+  using 'provided' packages.
+
+Release notes for deborphan 0.1.19 (2000-12-29T20+0200)
+* Cleaned up get_pkg_provides() and get_pkg_priority
+* Added pkgcmp() and redid pkg_info accordingly.
+* Made string_to_priority() case-insensitive.
+* Removed DOUBLECHECK constant.
+
+Release notes for deborphan 0.1.18 (2000-12-29T20+0200)
+* Added --fake-dev (-D) option, as requested in Debian 
+  bug #80391. It's a bit hacky.
+* New orphaner (checks options).
+
+Release notes for deborphan 0.1.17 (2000-12-21T22+0200)
+* Added strhash() and hash-comparison for package names.
+* Added get_pkg_info() as a replacement for some REs.
+* Set types for get_pkg_* to void.
+* Defaulted package->hold to 0. Only altered if -H is not 
+  given.
+
+Release notes for deborphan 0.1.16 (2000-12-19T15+0200)
+* Rewrote string_to_priority(). No particular gain.          (Wessel Dankers)
+* Cleaned up pkginfo.c a little bit.
+* Made the reading of /var/lib/dpkg/status go faster.
+* Set INPUT_BUFFER to 31. (length of "purged" status line).
+* Used memory that was allocated before, but used only once.
+* Changed strstripchr() for faster operation.
+* Enabled support for configure's --with-VAR options.
+
+Release notes for deborphan 0.1.15 (2000-12-19T15+0200)
+* Increased the efficiency of check_lib_deps() when checking 
+  specific packages (roughly twice as fast as before).
+* Changed strstripchr() to void (from char *).
+* Did a negligible bit of optimalization on strstripchr().
+* Made regcomp() options definable at compile-time.
+* Changed string_to_priority(). Now less accurate, but faster and
+  compatible with new -p handling.
+* Cleaned up check_lib_deps() somewhat.
+
+Release notes for deborphan 0.1.14 (2000-12-17T19+0200)
+* Added dpkghold and dpkgunhold to util/
+* Added -H (--force-hold) option.
+* Rewrote priority_to_string(). Not sure on the correctness now,
+  but it leaked memory before in any case.
+* Optimized strstripchr() a bit.
+* Added DEFAULT_PRIORITY #def to config.h
+* Removed MAXIMUM() macro. It made no sense.
+* Changed all occurrences of xcalloc to xmalloc (minor speed increase).
+* Defined some functions as 'inline'. Added inline check to configure.
+* Fixed improper handling of -p (-d caused it to be ignored).
+
+Release notes for deborphan 0.1.13 (2000-12-17T15+0200)
+* Fixed several possible buffer overflow situations
+* Fixed Debian bug #67423 (Lists packages still required)    (Peter Palfrader)
+* Added support for the "hold" flag.
+* Minor documentation update.
+* Added orphaner by Goswin Brederlow and Peter Palfrader 
+  to the distribution.
+
+Release notes for deborphan 0.1.12 (2000-08-01T20+0200)
+* New, faster, strstripchr()                                 (Paul Martin)
+* init_pkg_regex(), init_dep_regex(), for compiling regexps
+  only once.                                                 (Paul Martin)
+* free_pkg_regex(), free_dep_regex(), for freeing the
+  compiled regexps when we're done.
+* Several speed hacks, based on first character on the line. (Paul Martin)
+* Documentation typo fixed.
+* Restored intl/libgettext.h and intl/po2tbl.sed.in (empty files). 
+  These apparently caused building problems.
+
+Release notes for deborphan 0.1.11 (2000-07-03T18+0200)
+* Fixed a bug that caused not installed packages to be displayed
+  (Debian bug 66501).
+
+Release notes for deborphan 0.1.10 (2000-06-28T19+0200)
+* Started to move to POSIX.2 regular expressions instead of regular
+  libc functions. They are of not much use for now.
+* Removed an #ifdef, ctype.h is now mandatory for compilation.
+* Removed priority.c. 
+* Added string.c (including the functions in priority.c)
+* strstripchr() added in string.c for `pre-processing' lines.
+* Changed functions to expect lines without spaces or newlines.
+* Cleared intl/ subdirectory, there was nothing in there any way.
+  The directory itself was left because automake thinks it "needs" it.
+* Cleaned up the code; should compile flawlessly with gcc -Wall.
+* Slightly altered get_pkg_deps(); it now needs a less clean status file.
+* Moved package->install=0 to get_pkg_name. A package is now un-installed
+  until proven installed.
+* Discovered an odd bug. Built a quick work-around. A real fix is on
+  the to do list.
+* Got some of the "char *line2"s out of pkginfo.c, read-only memory is
+  more appropriate in those cases.
+
+Release notes for deborphan 0.1.9 (2000-06-28T19+0200)
+* Fixed a bug, which caused deborphan to append a ')' to packages
+  supplied on the command line.
+* Added --no-show-section option.
+* Removed AUTHORS file. I no longer seek immortality :)
+
+Release notes for deborphan 0.1.8 (2000-06-26T01+0200)
+* Gave the section some more slack.
+* Some tweaking.
+* NOTE: this version is totally untested. It came straight from CVS.
+
+Release notes for deborphan 0.1.7 (2000-06-06T20+0200)
+* Fixed an odd problem in get_pkg_status. Accuracy, memory usage, and speed
+  have improved.
+* Renamed -S to -s. And -s to -d.
+* Added --show-priority (-P) option. 
+* Made the output of --show-priority and --show-section look cute.
+* Added priority.c (string_to_priority() and priority_to_string())
+* Added option to search for user-specified packages.
+
+Release notes for deborphan 0.1.6 (2000-06-04T19+0200)
+* i18n, and dutch translation added.
+* Checks added for packages in section 'oldlibs', and packages outside 'main'. 
+* --show-section option added. By default implied by -a.
+* Some minor changes in the code.
+* Values for commandline options are declared globally.
+
+Release notes for deborphan 0.1.5 (2000-05-17T20+0200)
+* Output selection based on priority of the orphaned package (-p PRIORITY).
+* Updated exit.c to include information on --all-packages (and --priority).
+* Updated manual page for the new options.
+* Moved some options from config.h.in to configure.in.
+* config.h is no longer mandatory.
+* Changed "usage" message.
+* Added a bunch of ifdefs to avoid recursive headerfile loading.
+* Renamed --show-all to --show-deps (makes more sense now that there is -a)
+
+Release notes for deborphan 0.1.4 (2000-05-17T14+0200)
+* Added a THANKS file.
+* Debianized the package. This time, it may even work as it should.
+* Moved some stuff around in the code.
+* Replaced &package[0] by package, thanks guus.
+* Added Makefile.am in include/
+* Let automake handle the optimization-flags for the compiler.
+* Added all-packages option.
+
+Release notes for deborphan 0.1.3 (2000-05-13T18+0200)
+* The default is to run in nice-mode. Can be disabled in config.h
+* Added better error handling mechanism.
+* Created wrapper for getopt/getopt_long
+
+Release notes for deborphan 0.1.2 (2000-04-13T11+0200)
+* Bug from 0.1.1 fixed. 
+
+Release notes for deborphan 0.1.1 (2000-04-12T17+0200)
+* Less allocation of memory is done, resulting in faster operation.
+* Not all memory is cleared first, also for an increase in speed.
+* Improved error-message when status file is not found.
+* A linked list is used to store the packages. Allows for storage of 
+  theoretically unlimited packages.
+* xalloc.c added for error checking when allocating memory.
+* config.h was added. 
+* Dynamic memory allocation is done when reading the status-file.
+
+Release notes for deborphan 0.1.0 (2000-04-11T13+0200)
+* Added support for `provided' packages
+* Will parse options (not long options) on getopt.h-less systems.
+  The --help (-h) options is adapted accordingly.
+* The new "nice-mode" should enable checking for `recommended' 
+  and `suggested' packages.
+* Cleaned up (or GNU-ized) the manual page. 
+
+Release notes for deborphan 0.0.3 (2000-04-08T17+0200)
+* Added --show-all option.
+* Will compile on getopt.h-less systems
+
+Release notes for deborphan 0.0.2 (2000-04-08T14+0200)
+* Fixed the memory leaks.
+
+Release notes for deborphan 0.0.1 (2000-04-07T17+0200)
+* First public release.
+

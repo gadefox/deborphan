@@ -1,0 +1,97 @@
+CONFIGURATION
+-------------
+You can configure some default values at compile-time. Some of these
+may be overridden at run-time. See the list of C constants below for
+a detailed explanation of the options.
+
+The configure options that do not take an argument (like --with-isfa)
+can be set by using --without-var (e.g. --without-isfa).
+
+configure option           C-constant                 override at runtime
+---------------------------------------------------------------------------
+--with-priority=PRIOR      DEFAULT_PRIORITY                yes
+--with-isfa                ALL_PACKAGES_IMPLY_SECTION      yes
+                           STATUS_FILE                     yes
+                           REG_FLAGS                       no
+                           KEEPER_FILE                     yes
+--without-debfoster        IGNORE_DEBFOSTER                yes
+                           DEBFOSTER_KEEP                  no
+--with-ignore-essential    IGNORE_ESSENTIAL                no
+----------------------------------------------------------------------------
+The following constants are defined at the bottom of config.h:
+ STATUS_FILE   - The location of your status file
+                 (default: "/var/lib/dpkg/status")
+ DEFAULT_PRIORITY - The default priority to use when searching for packages.
+                    See the manual page (under --priority) for more information
+                    (default: 2)
+ REG_FLAGS     - Bitwise or'd list of options to pass to regcomp(3). Unsetting
+                 REG_ICASE will violate the dpkg standard, but is not likely
+                 to cause problems. Note that REG_EXTENDED is hard-coded.
+                 (default: REG_ICASE)
+ KEEPER_FILE   - Location of the file to store information about kept back
+                 packages. This can only be changed via src/Makefile.am.
+                 (default: /var/lib/deborphan/keep)
+ ALL_PACKAGES_IMPLY_SECTION - Imply --show-section if --all-packages is used.
+                              Shows in which sections the packages are. Can be
+                              overridden with --no-show-section at runtime.
+                              (default: 1)
+ IGNORE_DEBFOSTER - Ignore debfoster's keepers file by default.
+                    (default: 0)
+ DEBFOSTER_KEEP   - Location of debfoster's keepers file. Undefine to never
+                    use debfoster's keepfile.
+                    (default: configure)
+ IGNORE_ESSENTIAL - Ignore 'Essential: yes' lines in package information.
+                    (default: 0)
+
+To get deborphan to run faster, run configure with the following options:
+--with-priority=4 --without-isfa
+--with-bufsize=2000 --disable-nls --with-ignore-essential
+
+INSTALLATION
+------------
+Run the following commands:
+  ./configure [your options]
+  make all
+  make install
+
+TROUBLESHOOTING
+---------------
+If compilation fails on NLS (in po/ or intl/), try passing the
+--disable-nls option to configure. If you don't want to use the
+Dutch messages, supply --disable-nls for slightly faster operation.
+
+REMOVING ALL SUGGESTED PACKAGES
+-------------------------------
+apt-get -u remove `deborphan -p4`
+Never run this command without looking at deborphan's output first!
+
+If you decide you want to keep some packages use:
+  deborphan -A libfoo libbar lib...
+  apt-get -u remove `deborphan -p4`
+
+Next time you run deborphan, it will not display libfoo and libbar.
+See the manual page for more information.
+
+LISTING ALL UNINSTALLED PACKAGES
+--------------------------------
+deborphan --find-config lists uninstalled packages which still have
+configuration files left on the system. Listing all uninstalled packages,
+including those that don't have any configuration files left, is not
+supported by deborphan, since this is already implemented in dpkg. Use the
+following command to display them:  dpkg -l | grep '^rc' | awk '{print $2}'
+
+BUGS
+----
+deborphan does not check for "or" dependencies, i.e. when a package
+depends on libfoo OR libbar, both libfoo and libbar will be marked as
+being in use. Unless someone comes up with a bit of code to do this
+really fast, it will never be implemented.
+
+If you discover a new bug, send a message describing your problems,
+the output of deborphan, and your /var/lib/dpkg/status (if that is not
+too private information) to c.hey@web.de, or to the Debian BTS if you
+are using the Debian package.
+
+COPYING
+-------
+See the file COPYING provided in this package.

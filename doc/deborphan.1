@@ -1,0 +1,284 @@
+.TH DEBORPHAN 1 "February 2009" "deborphan"
+.\" Copyright (C) 2000, 2001, 2002, 2003 Cris van Pelt
+.\" Copyright (C) 2003, 2004, 2005, 2006 Peter Palfrader
+.\" Copyright (C) 2005 Daniel Déchelotte
+.\" Copyright (C) 2008 Andrej Tatarenkow
+.\" Copyright (C) 2008, 2009 Carsten Hey
+
+.SH NAME
+deborphan \- Orphaned package finder
+.SH SYNOPSIS
+.B deborphan
+[\fIOPTION\fR] \&.\|.\|.\& [\fIPACKAGE\fR] \&.\|.\|.
+.SH DESCRIPTION
+.I deborphan
+finds packages that have no packages depending on them. The default operation
+is to search within the libs, oldlibs and introspection sections to hunt down
+unused libraries.
+.PP
+If it is invoked with an optional list of packages, only the dependencies on
+those packages will be checked. The results are printed to stdout as if
+the option \fI\-\-show-deps\fR had been given. Searching for specific packages
+will show the package, regardless of its priority. It is possible to specify
+\fI\-\fR, to read a list of packages from standard input.
+
+.SH OPTIONS
+.TP
+\fB\-f, \-\-status\-file=\fIFILE\fR
+Use FILE as the status file.
+.TP
+\fB\-h, \-\-help\fP
+Display a short help message and exit.
+.TP
+\fB\-v, \-\-version\fP
+Display version information and exit.
+
+.\" show stuff
+.SS "OUTPUT MODIFIERS"
+.TP
+\fB\-d, \-\-show\-deps\fP
+Show a list of all installed packages and name the packages that depend on
+them.
+.TP
+\fB\-P, \-\-show\-priority\fP
+Show the priority of the packages found.
+.TP
+\fB\-s, \-\-show\-section\fP
+Show the sections the packages are in.
+.TP
+\fB\-\-no\-show\-section\fP
+Override showing sections when the default is to show them
+(see \fB\-\-all-packages\fR).
+.TP
+\fB\-z, \-\-show\-size\fP
+Show the installed size of the packages found.
+
+.\" search stuff
+.SS "SEARCH MODIFIERS"
+.TP
+\fB\-a, \-\-all\-packages\fP
+Check all the packages, instead of only those in the libs section.
+Best used (if at all used) in combination with \fB\-\-priority\fR.
+This option implies \fB\-\-show-section\fR.
+.\" , when compiled with ALL_PACKAGES_IMPLY_SECTION defined (default)
+.TP
+\fB\-e, \-\-exclude=\fILIST\fR
+Excludes the packages named in \fILIST\fR (a comma separated list) from
+the evaluation as if they didn't exist in the status file.
+.TP
+\fB\-D, \-\-exclude\-dev\fR
+Excludes all \-dev packages from the output. Ignored if \fB\-d, \-\-show-deps\fR is used.
+.TP
+\fB\-H, \-\-force\-hold\fP
+Ignore "hold" dpkg-flags on packages and thus display these packages. Without
+this option packages with the "hold" flag set will not be displayed.
+Please refer to
+.BR dpkg (1)
+for more information about package flags. Due a bug in
+aptitude (Debian bug #137771) hold flags created by aptitude are ignored by
+deborphan.
+.TP
+\fB\-\-ignore\-suggests\fP
+.PD 0
+.TP
+\fB\-\-ignore\-recommends\fP
+.PD
+Do not check if there is a package `suggesting' (\fB\-\-ignore\-suggests\fP)
+or `recommending' (\fB\-\-ignore\-recommends\fP) the package. When both options
+are used together, deborphan behaves as if the `nice-mode' mentioned below has
+been turned off.
+.TP
+\fB\-n, \-\-nice\-mode\fP
+Turn off nice-mode.
+Nice-mode checks if there is a package `suggesting' or `recommending'
+the package.
+If one is found, the package will be marked as in use, or,
+when \fB\-\-show\-deps\fR is used,
+print out the package suggesting the package
+as if it were depending on it.
+.TP
+\fB\-p, \-\-priority=\fIPRIORITY\fR
+Show only those packages with a priority equal to, or greater than
+\fIPRIORITY\fR.
+\fIPRIORITY\fR may be in the range of 1\(en5, or one of
+\fIrequired\fR, \fIimportant\fR, \fIstandard\fR, \fIoptional\fR,
+\fIextra\fR.
+Default value for \fIPRIORITY\fR is 2 (\fIimportant\fR).
+.TP
+\fB\-\-find\-config\fP
+This option searches for uninstalled packages which still have configuration
+files on the system. It implies the \fB\-a\fR option.
+.TP
+\fB\-\-libdevel\fP
+Also search in section "libdevel".
+
+.\" keep file stuff
+.SS "KEEP FILE MANAGEMENT"
+.TP
+\fB\-A, \-\-add\-keep \fIPKG1\fR \&.\|.\|.\& \fIPKGn\fR
+Add packages to the list of packages which are never to be reported, regardless
+of their state. You may specify '\fB-\fR' to use standard input. Note that
+package names are case-sensitive.
+.TP
+\fB\-k, \-\-keep\-file=\fIFILE\fR
+Use \fIFILE\fR to store the list of kept-back packages.
+.TP
+\fB\-L, \-\-list\-keep\fP
+Show the list of packages that are being kept back.
+.TP
+\fB\-R, \-\-del\-keep \fIPKG1\fR \&.\|.\|.\& \fIPKGn\fR\fP
+Remove packages from the list of packages which are never to be reported.
+You may specify '\fB-\fR' to use standard input. If there are no dependencies
+for this package next time \fIdeborphan\fR is invoked, it will be reported
+again.
+.TP
+\fB\-Z, \-\-zero\-keep\fP
+Purge the entire list of packages that are being kept back. The only option
+possible in combination with this option is \fB\-A\fR.
+
+.\" debfoster stuff - not compiled in debian
+.\" \fB\-\-df\-keep\fP
+.\" Use debfoster's keepfile, regardless of the default setting.
+.\" Can not be used if deborphan was compiled without support for debfoster.
+.\" .TP
+.\" \fB\-\-no\-df\-keep\fP
+.\" Do not use debfoster's keepfile.
+.\" .TP
+
+.SS "GUESSING"
+
+.\" guessing
+.TP
+\fB\-\-guess\-*\fP
+.PD 0
+.TP
+\fB\-\-no-guess\-*\fP
+.PD
+.\" See \fBGUESSING\fP below.
+.\" .SH GUESSING
+.\" .PP
+deborphan can try to guess what packages may not be of much use to you by
+examining the package's name and/or description.
+It will pretend the package is in the \fImain/libs\fR section,
+and report it as if it were a library.
+This method is in no way perfect or even reliable,
+so beware when using this!
+It is also possible to tell deborphan e.g., to guess all interpreters
+but not Perl by using \fB\-\-guess\-interpreters\fP
+\fB\-\-no\-guess\-perl\fP or to guess all but not Mono by using
+\fB\-\-guess-all\fP \fB\-\-no\-guess\-mono\fP.
+Please note that the \fB\-\-no\-guess\-\fP option must occur after the
+\fB\-\-guess\-\fP option it modifies, this makes it possible to declare
+more complex things like to guess all, except interpreters but
+additionally try to guess perl.
+
+.PP
+The following options are to be prefixed by \fI\-\-guess\-\fR or
+(except \fBonly\fP) by \fI\-\-no\-guess\-\fR:
+
+.TP
+\fBcommon\fP
+This option tries to find common packages, i.e.\& packages with names ending in
+\fI\-common\fR.
+
+.TP
+\fBdata\fP
+This option tries to find data packages, i.e.\& packages with names ending in
+\fI\-data\fR.
+
+.TP
+\fBdebug\fP
+This option tries to find debugging libraries, i.e.\& packages with names ending
+in \fI\-dbg\fR or \fI\-dbgsym\fR.
+
+.TP
+\fBdev\fP
+This option tries to find development packages,
+i.e.\& packages with names ending in \fI\-dev\fR.
+Also see option \fB\-\-libdevel\fP.
+
+.TP
+\fBdoc\fP
+This option tries to find documentation packages, i.e.\& packages with names
+ending in \fI\-doc\fR.
+
+.TP
+\fBdummy\fP
+This option tries to find dummy packages, i.e.\& packages with
+\fIdummy\fR or \fItransitional\fR in their short description.
+
+.TP
+\fBkernel\fP
+This option tries to find kernel-modules. It tries to match
+.\" Don't hyphenate the next line
+\%\fI(\-modules|^nvidia-kernel)\-.*[0\(en9]+\e.[0\(en9]+\e.[0\(en9]+\fR.
+
+.TP
+\fBinterpreters\fB
+Try to find all interpreter modules (i.e.\& imply \fBruby\fR, \fBpike\fR,
+\fBpython\fR, \fBperl\fR and \fBmono\fR).
+
+.TP
+\fBmono\fP
+This option tries to find mono libraries. It tries to match \fI^libmono\fR.
+
+.TP
+\fBperl\fP
+This option tries to find perl modules. It tries to match \fI^lib.*\-perl$\fR.
+
+.TP
+\fBpike\fP
+This option tries to find pike modules. It tries to match
+\fI^pike[[:digit:]]*\-\fR.
+
+.TP
+\fBpython\fP
+This option tries to find python modules. It tries to match
+\fI^python[[:digit:]]*\-\fR.
+
+.TP
+\fBruby\fP
+This option tries to find ruby modules. It tries to match
+\fI^lib.*\-ruby[[:digit:].]*$\fR.
+
+.TP
+\fBsection\fP
+This option tries to find libraries that were accidentally placed in the
+wrong section. It tries to match \fI^lib\fR, but not if it ends
+in one of: \fI\-dbg\fR, \fI\-dbgsym\fR, \fI\-doc\fR, \fI\-perl\fR, or
+\fI\-dev\fR.
+
+.TP
+\fBall\fP
+Try all of the above.
+
+.TP
+\fBonly\fP
+Ignore the package's section completely, and just go for the name and/or
+description. This option must be used in conjunction with one or more of the
+\fB\-\-guess\fR options listed above, or deborphan will not display anything.
+
+.SH FILES
+.TP
+.I /var/lib/dpkg/status
+Statuses of available packages. See the section
+.B INFORMATION ABOUT PACKAGES
+in \fIdpkg\fR's man-page for more information.
+.TP
+.I /var/lib/deborphan/keep
+A newline-separated list of packages to keep. Package names are in no
+particular order.
+.SH SEE ALSO
+.BR dpkg (8),
+.BR dselect (8),
+.BR cruft (8),
+.BR xargs (1)
+.SH BUGS
+If you report a bug, please include your \fI/var/lib/dpkg/status\fR file.
+That would help in reproducing the bugs.
+.SH AUTHORS
+
+deborphan was written by Cris van Pelt <"Cris van Pelt"@tribe.eu.org>, then
+maintained by Peter Palfrader <weasel@debian.org> and
+Carsten Hey <c.hey@web.de>
+
